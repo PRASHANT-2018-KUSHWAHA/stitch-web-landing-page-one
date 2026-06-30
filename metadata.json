@@ -1,0 +1,6 @@
+{
+  "name": "Lumio Landing Page",
+  "description": "Interactive responsive landing page for Lumio, featuring creative collage widgets, dynamic team boards, files management, and an on-brand AI asset generation playground powered by Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

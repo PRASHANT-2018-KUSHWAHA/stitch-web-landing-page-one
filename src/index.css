@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-page-bg: #FAF9F5;
+  --color-panel-bg: #F0EFEB;
+  --color-soft-card: #E9E8E4;
+  --color-soft-card-2: #F4F3EF;
+  --color-text: #1B1B1B;
+  --color-muted: #8C8880;
+  --color-muted-light: #BDBAB2;
+  --color-line: #D9D7D0;
+  --color-black: #181818;
+  --color-deep-black: #151515;
+  --color-white-card: #FFFDF8;
+  --color-white-soft: #FAF9F5;
+  
+  --font-sans: "Poppins", "Helvetica", Arial, sans-serif;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-scroll {
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9D7D0;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #BDBAB2;
+}
+
+/* Elegant glassmorphism styles */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-panel-dark {
+  background: rgba(24, 24, 24, 0.75);
+  backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
