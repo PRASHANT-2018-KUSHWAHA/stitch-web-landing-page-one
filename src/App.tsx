@@ -23,11 +23,15 @@ import {
 } from "lucide-react";
 import { TONE_OPTIONS, ASSET_TYPES, TEAM_USE_CASES, NEWS_ARTICLES, INITIAL_COMMENTS } from "./data/mockData";
 import { BrandFile, UserComment, NewsArticle } from "./types";
+import DashboardView from "./components/DashboardView";
+import PlaybookView from "./components/PlaybookView";
+import PricingView from "./components/PricingView";
 
 export default function App() {
   // Navigation states
   const [activeTab, setActiveTab] = useState<string>("Product");
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<"product" | "dashboard" | "playbook" | "pricing">("product");
 
   // File explorer states
   const [files, setFiles] = useState<BrandFile[]>([]);
@@ -304,39 +308,51 @@ export default function App() {
       {/* 1. Floating Navigation Header */}
       <header className="fixed top-[24px] left-0 right-0 z-50 flex items-center justify-center px-4 w-full pointer-events-none transition-all duration-300">
         <div className={`pointer-events-auto w-full max-w-[760px] flex items-center justify-between bg-black/95 backdrop-blur-xl rounded-full px-2 py-2 shadow-xl border border-white/10 h-[56px] transition-all duration-300 ${isScrolled ? 'scale-95 shadow-2xl' : 'scale-100'}`}>
-          <div className="flex items-center gap-6 pl-3">
-            <a href="#lumio-app-root" className="w-[34px] h-[34px] rounded-full border border-page-bg/80 flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
+          <div className="flex items-center gap-4 md:gap-6 pl-3 flex-1 min-w-0">
+            <button 
+              onClick={() => {
+                setActiveView("product");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="w-[34px] h-[34px] rounded-full border border-page-bg/80 flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer"
+            >
               <span className="text-page-bg font-black text-sm leading-none">L</span>
-            </a>
+            </button>
             
-            <nav className="hidden md:flex items-center gap-6">
-              {["Product", "Solutions", "About", "Blog"].map((tab) => (
-                <a 
-                  key={tab}
+            <nav className="flex items-center gap-3 md:gap-6 overflow-x-auto scrollbar-none flex-1 py-1">
+              {[
+                { label: "Product", id: "product" },
+                { label: "Dashboard", id: "dashboard" },
+                { label: "Playbook", id: "playbook" },
+                { label: "Pricing", id: "pricing" }
+              ].map((view) => (
+                <button 
+                  key={view.id}
                   onClick={() => {
-                    setActiveTab(tab);
-                    const targetId = tab === "Product" ? "collage-section" : tab === "Solutions" ? "brand-os-section" : tab === "About" ? "studio-section" : "updates-section";
-                    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+                    setActiveView(view.id as any);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className={`font-medium tracking-wide text-xs uppercase cursor-pointer transition-colors duration-300 ${activeTab === tab ? 'text-[#FF416C]' : 'text-page-bg/75 hover:text-page-bg'}`}
+                  className={`font-medium tracking-wide text-[10px] md:text-xs uppercase cursor-pointer transition-colors duration-300 shrink-0 ${activeView === view.id ? 'text-[#FF416C]' : 'text-page-bg/75 hover:text-page-bg'}`}
                 >
-                  {tab}
-                </a>
+                  {view.label}
+                </button>
               ))}
             </nav>
           </div>
           
           <button 
             onClick={() => setShowDemoModal(true)}
-            className="border border-white/30 text-page-bg bg-white/5 hover:bg-page-bg hover:text-black hover:border-page-bg font-semibold rounded-full transition-all duration-300 shrink-0 flex items-center px-5 text-[10px] h-[36px] uppercase tracking-wider cursor-pointer"
+            className="border border-white/30 text-page-bg bg-white/5 hover:bg-page-bg hover:text-black hover:border-page-bg font-semibold rounded-full transition-all duration-300 shrink-0 flex items-center px-3.5 md:px-5 text-[9px] md:text-[10px] h-[36px] uppercase tracking-wider cursor-pointer ml-2"
           >
             Book a demo
           </button>
         </div>
       </header>
 
-      <main>
-        {/* 1. Hero Section */}
+      <main className={activeView === "product" ? "" : "pt-[80px]"}>
+        {activeView === "product" && (
+          <>
+            {/* 1. Hero Section */}
         <section className="pt-[180px] md:pt-[220px] px-6 max-w-[1728px] mx-auto flex flex-col items-center text-center relative overflow-visible bg-page-bg pb-[100px] md:pb-[140px]">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-soft-card-2 border border-line/40 rounded-full mb-6 animate-fade-in">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
@@ -1335,7 +1351,11 @@ export default function App() {
             </div>
           </div>
         </section>
+        </>)}
 
+        {activeView === "dashboard" && <DashboardView />}
+        {activeView === "playbook" && <PlaybookView />}
+        {activeView === "pricing" && <PricingView />}
       </main>
 
       {/* 11. Footer Section */}
@@ -1385,10 +1405,10 @@ export default function App() {
             <div className="lg:col-span-2">
               <h4 className="text-[10px] font-extrabold text-white mb-6 uppercase tracking-widest">Product</h4>
               <ul className="flex flex-col gap-3.5">
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Platform Core</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Semantic Engine</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Studio Workspace</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Integrations</a></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("dashboard"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Platform Console</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("dashboard"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Compliance Engine</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("product"); setTimeout(() => document.getElementById("studio-section")?.scrollIntoView({ behavior: "smooth" }), 100); }}>Studio Playground</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("pricing"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Cost Pricing Scale</button></li>
               </ul>
             </div>
 
@@ -1396,10 +1416,10 @@ export default function App() {
             <div className="lg:col-span-2">
               <h4 className="text-[10px] font-extrabold text-white mb-6 uppercase tracking-widest">Company</h4>
               <ul className="flex flex-col gap-3.5">
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">About Us</a></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("product"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>About Us</button></li>
                 <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Careers</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Newsroom</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Contact team</a></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("product"); setTimeout(() => document.getElementById("updates-section")?.scrollIntoView({ behavior: "smooth" }), 100); }}>Newsroom</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => setShowDemoModal(true)}>Contact team</button></li>
               </ul>
             </div>
 
@@ -1407,10 +1427,10 @@ export default function App() {
             <div className="lg:col-span-2">
               <h4 className="text-[10px] font-extrabold text-white mb-6 uppercase tracking-widest">Resources</h4>
               <ul className="flex flex-col gap-3.5">
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Blog Insights</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Documentation</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Community Space</a></li>
-                <li><a className="text-xs text-white/60 hover:text-white transition-colors" href="#">Customer Support</a></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("playbook"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Blog Insights</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("playbook"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Documentation Playbook</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => { setActiveView("playbook"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Community Standards</button></li>
+                <li><button className="text-xs text-white/60 hover:text-white transition-colors cursor-pointer text-left" onClick={() => setShowDemoModal(true)}>Customer Support</button></li>
               </ul>
             </div>
 
